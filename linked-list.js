@@ -15,11 +15,11 @@ l2 = {
 // let l2 = {
 //   val: 0,
 // };
-const arrToL1 = [
-  1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 1,
-];
-const arrToL2 = [5, 6, 4];
+// const arrToL1 = [
+//   1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+//   0, 0, 0, 0, 1,
+// ];
+// const arrToL2 = [5, 6, 4];
 
 // Build arr from list
 const buildArr = (list, arrArg = []) => {
@@ -114,4 +114,86 @@ var addTwoNumbers = function (l1, l2) {
   return resList;
 };
 
-console.log(addTwoNumbers(l1, l2));
+// console.log(addTwoNumbers(l1, l2));
+
+function createNode(val, next) {
+  this.val = val === undefined ? 0 : val;
+  this.next = next === undefined ? null : next;
+}
+
+// Numbers in lists are in reversed order
+// Returns the result as fom nums in NOT reversed order
+// eg: 2->4->3 + 5->6->4 = 7->0->8 (explanation 243+ 564 -> 342+465(real numbers to calc.) = 807(real NOt reversed result))
+const addTwoNumbers3 = (l1, l2, leaf = null, carry = 0) => {
+  let resList = /* resListArg || new createNode(0) */ null;
+  let val; /* , leaf; */
+  // let carry
+
+  if (l1.next === null && l2.next === null) {
+    val = (+l1.val || 0) + (+l2.val || 0) + carry;
+    resList = new createNode(val, leaf);
+    return resList;
+  }
+
+  val = (+l1.val || 0) + (+l2.val || 0) + carry;
+  if (val > 9) {
+    carry = 1;
+    val %= 10;
+  }
+
+  leaf = new createNode(val, leaf);
+  let nextL1 = l1.next ?? new createNode(0);
+  let nextL2 = l2.next ?? new createNode(0);
+  resList = addTwoNumbers3(nextL1, nextL2, leaf, carry);
+
+  return resList;
+};
+
+// Numbers in lists are in reversed order
+// Returns the result ALSO in reversed order
+// eg: 2->4->3 + 5->6->4 = 7->0->8 (explanation 243+ 564 -> 342+465(real numbers to calc.) = 807->708 (reversed result))
+const addTwoNumbers2 = (l1, l2, carry = 0) => {
+  let resList = null;
+  let val;
+  if ((l1.next === null) & (l2.next === null)) {
+    val = +l1.val + +l2.val + carry;
+    if (val > 9) {
+      val %= 10;
+      carry = 1;
+      resList = new createNode(val);
+      resList.next = new createNode(carry);
+
+      return resList;
+    }
+
+    resList = new createNode(val);
+
+    return resList;
+  }
+
+  val = +l1.val + +l2.val + carry;
+  carry = 0;
+  if (val > 9) {
+    val %= 10;
+    carry = 1;
+  }
+  resList = new createNode(val);
+
+  let nextL1 = l1.next ?? new createNode(0);
+  let nextL2 = l2.next ?? new createNode(0);
+  resList.next = addTwoNumbers2(nextL1, nextL2, carry);
+
+  return resList;
+};
+
+l1 = {
+  val: 8,
+  next: { val: 3, next: { val: 2, next: null } },
+};
+
+l2 = {
+  val: 9,
+  next: { val: 2, next: { val: 1, next: null } },
+};
+console.log(addTwoNumbers3(l1, l2)); // reversed result
+console.log(addTwoNumbers2(l1, l2)); // NOT reversed result
