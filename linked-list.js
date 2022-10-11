@@ -195,5 +195,59 @@ l2 = {
   val: 9,
   next: { val: 2, next: { val: 1, next: null } },
 };
-console.log(addTwoNumbers3(l1, l2)); // reversed result
-console.log(addTwoNumbers2(l1, l2)); // NOT reversed result
+// console.log(addTwoNumbers3(l1, l2)); // reversed result
+// console.log(addTwoNumbers2(l1, l2)); // NOT reversed result
+
+// Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the val in the list's nodes (i.e., only nodes themselves may be changed.)
+
+var swapPairs = function (head) {
+  if (head === null) return head;
+
+  let resList = new createNode();
+
+  if (head.next === null) {
+    return head;
+  }
+
+  if (head.next.next === null) {
+    resList.val = head.next.val;
+    resList.next = new createNode(head.val);
+
+    return resList;
+  }
+
+  // Swap first 2 nodes
+  resList.val = head.next.val;
+  resList.next = new createNode(head.val);
+
+  // recursive call. Assisgn res to the step 1 next val  }
+
+  resList.next.next = swapPairs(head.next.next);
+
+  return resList;
+};
+const listToSwap = buildListOut([1, 2, 3]);
+// console.log(swapPairs(listToSwap));
+
+// Given the head of a singly linked list, reverse the list, and return the reversed list.
+var reverseList = function (head, leafArgs) {
+  let leaf = leafArgs || null;
+  let resList = new createNode(0);
+
+  if (head === null) return head;
+
+  if (head.next === null) {
+    resList.val = head.val;
+    resList.next = leaf;
+
+    return resList;
+  }
+
+  resList.val = head.val;
+  resList.next = leaf;
+
+  resList = reverseList(head.next, resList);
+  return resList;
+};
+
+console.log(reverseList(listToSwap));
