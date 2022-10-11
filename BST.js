@@ -68,29 +68,6 @@ const newTree = inOrderTreeBuild(tree);
 // console.log({ newTree });
 // console.log(searchBST(tree, 63));
 
-// const getElt = (rowIndx, colIndx, elArgs = 0, memo) => {
-//   let el = 0;
-//   el += elArgs;
-
-//   if (memo[(rowIndx, colIndx)]) {
-//     el = memo[(rowIndx, colIndx)];
-//     return el;
-//   }
-
-//   if (colIndx === 0 || colIndx === rowIndx) {
-//     el = 1;
-//     return el;
-//   }
-
-//   if (colIndx === 1 || colIndx === rowIndx - 1) {
-//     el = rowIndx;
-//     return el;
-//   }
-
-//   // el = getElt(rowIndx - 1, colIndx - 1, el) + getElt(rowIndx - 1, colIndx, el);
-//   return el;
-// };
-
 // Pascal's Triangle
 //
 const getElt = (rowIndx, colIndx, memo) => {
