@@ -40,6 +40,7 @@ var reverseString = function (s) {
   while (lastIndx !== 0) {
     s.push(s[lastIndx - 1]);
     s.splice(lastIndx - 1, 1);
+
     firstIndx++;
     lastIndx--;
   }

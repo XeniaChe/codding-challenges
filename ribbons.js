@@ -46,4 +46,24 @@ function solutionRibbons(a, k) {
   return resLength;
 }
 
+// Second solution
+var solutionRibbons = function (a, k) {
+  // Sort the arr in ascending order
+  a = a.sort((a, b) => a - b);
+  const lastEl = a.length - 1;
+
+  if (k === 1) return a[lastEl];
+
+  for (let i = lastEl - 1; i >= 0; i--) {
+    let res = 1;
+
+    for (let j = lastEl; j > i; j--) {
+      res += Math.floor(a[j] / a[i]);
+    }
+
+    if (res >= k) return a[i];
+  }
+};
+
 console.log(solutionRibbons([5, 2, 7, 4, 9], 5));
+console.log(solutionRibbons([1, 2, 3, 4, 9], 6));

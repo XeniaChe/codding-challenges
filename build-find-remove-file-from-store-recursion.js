@@ -19,59 +19,46 @@ const buildPAth = (str) => {
   return str.split('/').slice(1);
 };
 
-const buildStore = (pathArr, fileSize, store) => {
-  const localStore = store;
-  const fileName = pathArr[pathArr.length - 1];
-  if (pathArr.length === 1) {
-    localStore[fileName] = {
-      name: fileName,
-      size: fileSize,
-    };
+const buildStore = (pathArr, fileSize, store = {}) => {
+  let pointer = store;
+  while (pathArr.length > 1) {
+    pointer[pathArr[0]] ??= {};
 
-    return 'created';
+    pointer = pointer[pathArr[0]];
+    pathArr = pathArr.slice(1);
   }
 
-  localStore[pathArr[0]] ??= {};
-  const nextPath = pathArr.slice(1);
+  let fileName = pathArr[0];
+  pointer[fileName] = { name: fileName, size: fileSize };
 
-  buildStore(nextPath, fileSize, localStore[pathArr[0]]);
+  let msg = pointer[fileName].name ? 'created' : 'error';
+  return msg;
 };
 
-const findFile = (pathFrom, store, file = {}) => {
-  const fileNameFrom = pathFrom[pathFrom.length - 1];
+const findFile = (pathFrom, store) => {
+  let pointer = store;
+  while (pathFrom.length > 1) {
+    pointer = pointer[pathFrom[0]];
 
-  if (pathFrom.length === 1) {
-    if (store[fileNameFrom]) {
-      file = { ...store[fileNameFrom] };
+    if (!pointer) throw new Error('Wrong path');
 
-      delete store[fileNameFrom];
-
-      return file;
-    }
-
-    return 'not found';
+    pathFrom = pathFrom.slice(1);
   }
 
-  const nextPath = pathFrom.slice(1);
+  const fileName = pathFrom[0];
+  const file = { ...pointer[fileName] };
+  delete pointer[fileName];
 
-  file = findFile(nextPath, store[pathFrom[0]], file);
-
-  return file;
+  return file.name ? file : 'not found';
 };
 
-const moveFile = (file, pathTo, store) => {
-  const fileNameTo = pathTo[pathTo.length - 1];
+const moveFile = (pathFrom, pathTo, store) => {
+  // Find  and remove file from init location
+  const file = findFile(pathFrom, store);
+  if (!file.name) throw new Error('File does not exists');
 
-  if (pathTo.length === 1) {
-    store[fileNameTo] = { ...file };
-
-    return 'moved';
-  }
-
-  store[pathTo[0]] ??= {};
-  const nextPath = pathTo.slice(1);
-
-  moveFile(file, nextPath, store[pathTo[0]]);
+  // Move to  a new one
+  buildStore(pathTo, file.size, store);
 };
 
 let path1 = buildPAth('/a/b/fileA.txt');
@@ -82,7 +69,9 @@ buildStore(path1, '4', store);
 console.log({ store });
 
 // Find file REMOVE from old location
-const file = findFile(path1, store);
 // move to a new location
-moveFile(file, path2, store);
+moveFile(path1, path2, store);
 console.log({ store });
+// Check
+const newFile = findFile(path2, store);
+console.log({ newFile });
