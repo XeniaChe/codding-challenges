@@ -1,3 +1,221 @@
+///////////////////////////////////////////////// LEARNING
+let tree = {
+  val: 23,
+  left: {
+    val: 3,
+    left: { val: 1, left: null, right: null },
+    right: { val: 7, left: null, right: null },
+  },
+  right: {
+    val: 37,
+    left: { val: 29, left: null, right: null },
+    right: { val: 50, left: null, right: null },
+  },
+};
+/* 938. Range Sum of BST
+  Easy
+
+  Given the root node of a binary search tree and two integers low and high, return the sum of values of all nodes with a value in the inclusive range [low, high].
+ */
+var rangeSumBST = function (root, low, high) {
+  if (!root) return 0;
+  let sum;
+  if (root.val >= low && root.val <= high) sum += root.val;
+
+  if (root.val > low) sum += rangeSumBST(root.left, low, high);
+  if (root.val < high) sum += rangeSumBST(root.right, low, high);
+
+  return sum;
+};
+
+// Same as Above
+// The Iterative Version
+var rangeSumBST = function (root, low, high) {
+  if (!root) return 0;
+  let sum = 0,
+    stack = [root];
+
+  while (stack.length) {
+    let node = stack.pop();
+
+    if (node.val >= low && node.val <= high) sum += node.val;
+
+    if (node.right && node.val < high) stack.push(node.right);
+    if (node.left && node.val > low) stack.push(node.left);
+  }
+
+  return sum;
+};
+
+/* 530. Minimum Absolute Difference in BST
+  Easy
+  Given the root of a Binary Search Tree (BST), return the minimum absolute difference between the values of any two different nodes in the tree.
+ 
+ !!!HINT!!!
+  As briefly mentioned at the top of this article, if you perform an inorder traversal on a BST, you will visit the nodes in sorted order. Therefore, if we do an inorder DFS, we can get the nodes in sorted order without the O(n⋅logn) sort, resulting in an overall time complexity of O(n).
+
+  */
+var dfsInOrderSorting = (root, arr = []) => {
+  if (!root) return;
+
+  if (root.left) dfsInOrderSorting(root.left, arr);
+  arr.push(root.val);
+  if (root.right) dfsInOrderSorting(root.right, arr);
+
+  return arr;
+};
+
+// console.log(dfsInOrderSorting(tree));
+
+var getMinimumDifference = function (root) {
+  let minDif = +Infinity;
+
+  let sortedVals = dfsInOrderSorting(root);
+
+  for (let i = 0; i < sortedVals.length - 1; i++) {
+    minDif = Math.min(minDif, sortedVals[i + 1] - sortedVals[i]);
+  }
+
+  return minDif;
+};
+// console.log(getMinimumDifference(tree));
+
+/* 98. Validate Binary Search Tree
+  Medium
+  Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+
+  A valid BST is defined as follows:
+
+  The left 
+  subtree
+  of a node contains only nodes with keys less than the node's key.
+  The right subtree of a node contains only nodes with keys greater than the node's key.
+  Both the left and right subtrees must also be binary search trees.
+ */
+var isValidBST = function (root, min = -Infinity, max = +Infinity) {
+  if (!root) return true;
+
+  if (root.val >= max || root.val <= min) return false;
+
+  let left = isValidBST(root.left, min, root.val);
+
+  let right = isValidBST(root.right, root.val, max);
+
+  return left && right;
+};
+
+// OR//
+
+// The Same As Above
+// Itterative solution
+var isValidBST = function (root) {
+  let min = -Infinity,
+    max = +Infinity;
+  let stack = [[root, min, max]];
+
+  while (stack.length) {
+    let [node, min, max] = stack.pop();
+
+    if (node.val >= max || node.val <= min) return false;
+
+    if (node.left) stack.push([node.left, min, node.val]);
+    if (node.right) stack.push([node.right, node.val, max]);
+  }
+
+  return true;
+};
+
+// console.log(isValidBST(tree));
+
+/* Insert into a Binary Search Tree
+
+  Solution
+  You are given the root node of a binary search tree (BST) and a value to insert into the tree. Return the root node of the BST after the insertion. It is guaranteed that the new value does not exist in the original BST.
+
+  Notice that there may exist multiple valid ways for the insertion, as long as the tree remains a BST after insertion. You can return any of them
+ */
+var insertIntoBST = function (root, val) {
+  if (!root) {
+    return { val, left: null, right: null };
+  }
+
+  if (root.val > val) {
+    root.left = insertIntoBST(root.left, val);
+  }
+  if (root.val < val) {
+    root.right = insertIntoBST(root.right, val);
+  }
+
+  return root;
+};
+
+// console.log(insertIntoBST(tree, 77));
+
+/* Closest Binary Search Tree Value
+
+  Given the root of a binary search tree and a target value, return the value in the BST that is closest to the target.
+ */
+
+// Binary Search Itterative
+var closestValue = function (root, target) {
+  let val,
+    closest = root.val;
+  if (!root.left && !root.righ) return closest;
+
+  while (root !== null) {
+    val = root.val;
+    closest =
+      Math.abs(val - target) < Math.abs(closest - target) ? val : closest;
+    root = target < root.val ? root.left : root.righ;
+  }
+
+  return closest;
+};
+
+// Binary Search Recursive. O(H) time; H - hight of the tree
+//
+var closestValue = function (root, target, closest = root.val) {
+  if (!root) return closest;
+
+  closest =
+    Math.abs(target - root.val) < Math.abs(target - closest)
+      ? root.val
+      : closest;
+
+  return root.val > target
+    ? closestValue(root.left, target, closest)
+    : closestValue(root.right, target, closest);
+};
+
+//  Recursive Inorder + Linear search, Slower -> O(N) time
+var buldSortedArrInOrder = (root, arr = []) => {
+  if (!root) return;
+
+  buldSortedArrInOrder(root.left, arr);
+  arr.push(root.val);
+  buldSortedArrInOrder(root.right, arr);
+  return arr;
+};
+
+var closestValue = function (root, target) {
+  let closest = root.val;
+  // Build sorted arr from root
+  let sortedArr = buldSortedArrInOrder(root);
+
+  // Loop over arr and find the closest val
+  for (let i = 0; i < sortedArr.length; i++) {
+    closest =
+      Math.abs(closest - target) < Math.abs(sortedArr[i] - target)
+        ? closest
+        : sortedArr[i];
+  }
+
+  return closest;
+};
+let treeCur = { val: 2, left: { val: 1 }, right: { val: 3 } },
+  target = 0.15;
+console.log(closestValue(treeCur, target));
+
 const InOrderTreeTrav = (root) => {
   const nodes = [];
   if (!root) return;
@@ -55,7 +273,7 @@ var searchBST = function (root, val) {
   }
 };
 
-let tree = {
+tree = {
   val: 8,
   left: {
     val: 3,
@@ -262,4 +480,4 @@ var generateTrees = function (n) {
   return recur(1, n);
 };
 
-console.log(generateTrees(3));
+// console.log(generateTrees(3));

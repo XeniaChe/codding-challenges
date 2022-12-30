@@ -53,6 +53,65 @@ var getSum = function (a, b) {
   return sum;
 };
 
+////// More or less the same time/space complexity as above
+/// just more compact
+var getSum = function (a, b) {
+  let sum;
+
+  let bigNum = Math.abs(a) >= Math.abs(b) ? a : b;
+  let smallNum = Math.abs(a) >= Math.abs(b) ? b : a;
+
+  sum = bigNum;
+
+  while (smallNum) {
+    if (smallNum > 0) {
+      sum++;
+      smallNum--;
+    }
+
+    if (smallNum < 0) {
+      sum--;
+      smallNum++;
+    }
+  }
+
+  return sum;
+};
+
+var getSum = function (a, b) {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  if (x < y) return getSum(b, a);
+  let sign = a > 0 ? 1 : -1;
+  //add on sign at end
+
+  if (a * b >= 0) {
+    //sum of two positive integers x+y where x>y
+    while (y) {
+      let answer = x ^ y;
+      //x xor y-->1xor0=1 0xor0=0 1xor1=0
+
+      let carry = (x & y) << 1;
+      //the carry is x&y shifted over to left by 1
+      x = answer;
+      y = carry;
+      //eventually y will terminate--and you will be left with anwer
+    }
+  } else {
+    //difference of two integers x-y where x>y
+    while (y) {
+      let answer = x ^ y;
+      //answer is equal to xXORy
+      let borrow = (~x & y) << 1;
+      //borrow is equal to the negation of x AND y shifted over one bit to the left
+      x = answer;
+      y = borrow;
+      //for next iteration--eventually y terminates when you get right answer
+    }
+  }
+  return x * sign;
+};
+
 let a, b;
 a = -1;
 b = 0;
@@ -60,9 +119,9 @@ a = 2;
 b = 3;
 a = -12;
 b = -8;
-a = -1;
-b = 1;
-a = 16;
-b = -14;
+// a = -1;
+// b = 1;
+// a = 16;
+// b = -14;
 
-// console.log(getSum(a, b));
+console.log(getSum(a, b));

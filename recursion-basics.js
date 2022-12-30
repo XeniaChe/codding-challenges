@@ -127,7 +127,8 @@ Given two integer n and k, return the kth (1-indexed) symbol in the nth row of a
 /* Simillar to Pascal's triangle solution. Generally you build a whole array
 all the way down to the (n,k). To heavy calculation
 Working bit only to the point where k is very hight
- */ /* var kthGrammar = function (n, k) {
+ */
+/* var kthGrammar = function (n, k) {
   if ((n === 1 || n === 2) && k === 1) return 0;
   if (n === 2 && k === 2) return 1;
 
@@ -160,3 +161,52 @@ var kthGrammar = function (n, k) {
 };
 // console.log(kthGrammar(30, 434991989));
 // console.log(kthGrammar(4, 6));
+
+const dfsTest = (grid, row, col, sum) => {
+  let m = grid.length,
+    n = grid[0].length;
+
+  let rowCheck = row < m && row >= 0;
+  let colCheck = col < n && col >= 0;
+
+  if (!rowCheck || !colCheck || !grid[row][col]) return /* sum */;
+
+  if (grid[row][col]) {
+    sum.val++;
+    grid[row][col] = 0;
+
+    /* sum =  */ dfsTest(grid, row + 1, col, sum);
+    /* sum =  */ dfsTest(grid, row - 1, col, sum);
+    /* sum =  */ dfsTest(grid, row, col + 1, sum);
+    /* sum =  */ dfsTest(grid, row, col - 1, sum);
+  }
+
+  // return sum;
+};
+// Avoiding the need to return 'sum' from every recursive call
+// By making 'sum' a variable of reference type = object
+const test = (grid) => {
+  /*let  sum =  0  */
+  let sum = { val: 0 },
+    m = grid.length,
+    n = grid[0].length;
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j]) {
+        /* sum +=  */ dfsTest(grid, i, j, sum);
+      }
+    }
+  }
+
+  return sum.val;
+};
+let testGr = [
+  [0, 1, 1, 0],
+  [0, 1, 1, 0],
+  [0, 0, 1, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+];
+
+// console.log(test(testGr));

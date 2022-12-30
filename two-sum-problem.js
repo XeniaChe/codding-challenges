@@ -56,3 +56,30 @@ var twoSum = function (nums, target) {
   });
   return arrRes;
 };
+
+/* Using Hashing */
+/* Given an array of integers nums and an integer target, return indices of two numbers such that they add  up to target. You cannot use the same index twice.
+ */
+
+/* We can build a hash map as we iterate along the array, mapping each value to it's index. At each index i, where num = nums[i], we can check our hash map for target - num. Adding key-value pairs and checking for   target - num are all O(1), so our time complexity will improve to O(n).
+ */
+var twoSum = function (nums, target) {
+  let dictionary = new Map();
+
+  for (let i = 0; i < nums.length; i++) {
+    let num = nums[i];
+    let complement = target - num;
+
+    // here key are nums,  values are indices
+    if (dictionary.has(complement)) {
+      return [i, dictionary.get(complement)];
+    }
+
+    // Set num as key, index as value
+    dictionary.set(num, i);
+  }
+
+  return [-1, -1];
+};
+
+console.log(twoSum([1, 3, 4, 5, 7], 10));
