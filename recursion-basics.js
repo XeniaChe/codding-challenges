@@ -17,6 +17,8 @@ var fib = function (n, memo = {}) {
 Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
  */
 
+// Top - Bottom
+// Recursive sol-n
 /* var climbStairs = function (n, memo = {}) {
   if (n === 1) return 1;
   if (n === 2) return 2;
@@ -49,6 +51,21 @@ var climbStairs2 = function (n, res, k) {
   return climbStairs2(n, res, ++k);
 };
 
+// Bottom - Top
+// Itterative sol-n
+var climbStairs = function (n) {
+  let ans = new Array(n).fill(0);
+  ans[0] = 1;
+  ans[1] = 2;
+
+  if (n == 1 || n == 2) return ans[n - 1];
+
+  for (let i = 2; i < ans.length; i++) {
+    ans[i] = ans[i - 1] + ans[i - 2];
+  }
+  return ans[ans.length - 1];
+};
+
 ////// Unexpectedly slower and highier space complexity than above
 /* var climbStairs2 = function (n) {
   let res = {
@@ -67,7 +84,7 @@ var climbStairs2 = function (n, res, k) {
  */
 
 // console.log(climbStairs(7));
-// console.log(climbStairs2(7));
+console.log(climbStairs(4));
 
 /////// POWER OF
 // Implement pow(x, n), which calculates x raised to the power n (i.e., xn).

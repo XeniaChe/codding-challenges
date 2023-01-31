@@ -1,0 +1,22 @@
+{
+  "name": "challenges-solutions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "BST.js",
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XeniaChe/codding-challenges.git"
+  },
+  "author": "Cserkun Xenia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XeniaChe/codding-challenges/issues"
+  },
+  "homepage": "https://github.com/XeniaChe/codding-challenges#readme",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
