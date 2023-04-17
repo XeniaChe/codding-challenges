@@ -63,7 +63,7 @@ var minCostClimbingStairs = function (cost, obj = {}, n) {
   return ans[ans.length];
 };
 
-let cost = [10, 15, 20];
+let cost = [10, 15, 20, 3];
 // cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1];
 // console.log(minCostClimbingStairs(cost));
 
@@ -131,6 +131,7 @@ var rob = function (nums) {
 
   ans[0] = nums[0];
   ans[1] = Math.max(nums[0], nums[1]);
+
   for (let i = 2; i < ans.length; i++) {
     ans[i] = Math.max(ans[i - 2] + nums[i], ans[i - 1]);
   }
@@ -141,6 +142,11 @@ var rob = function (nums) {
 let nums = [1, 2, 3, 1];
 nums = [2, 1, 1, 2];
 // console.log(rob(nums));
+
+let nums2 = [1, 2, 3, 1];
+nums2 = [2, 1, 1, 2, 3, 8, 1];
+nums2 = [1, 2, 3, 1];
+console.log(rob(nums2));
 
 /* 
   Longest Increasing Subsequence
@@ -394,7 +400,7 @@ let coins = [1, 2, 5],
 // (coins = [2]), (amount = 3);
 
 // (coins = [186, 419, 83, 408]), (amount = 6249);
-console.log(coinChange(coins, amount));
+// console.log(coinChange(coins, amount));
 
 /* Best Time to Buy and Sell Stock
   Easy
@@ -516,5 +522,41 @@ var canJump = function (nums) {
 
 nums = [2, 3, 1, 1, 4];
 nums = [0, 1];
-console.log(canJump(nums));
+// console.log(canJump(nums));
+
+/////////////////////////////////////////////////////////////////////////// Second Attempt
+const climbStairsSecond = (num) => {
+  const arr = new Array(n).fill(-1);
+
+  for (let i = 0; i < arr.length; i++) {
+    if (i == 0 || i == 1) {
+      arr[i] = i + 1;
+    } else {
+      arr[i] = arr[i - 1] + arr[i - 2];
+    }
+  }
+
+  return arr[arr.length - 1];
+};
+
+const maxProfitSec = (prices) => {
+  let minPr = prices[0],
+    maxPr = minPr,
+    prof = 0;
+
+  for (let i = 0; i < prices.length; i++) {
+    maxPr = Math.max(maxPr, prices[i]);
+
+    if (minPr > prices[i]) {
+      minPr = prices[i];
+      maxPr = minPr;
+    }
+
+    prof = Math.max(prof, maxPr - minPr);
+  }
+
+  return prof;
+};
+// console.log(maxProfitSec([7, 6, 4, 3, 1]));
+
 module.exports = { canJump, maxSubArray, coinChange };
