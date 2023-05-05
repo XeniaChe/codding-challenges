@@ -558,5 +558,4 @@ const maxProfitSec = (prices) => {
   return prof;
 };
 // console.log(maxProfitSec([7, 6, 4, 3, 1]));
-
-module.exports = { canJump, maxSubArray, coinChange };
+module.exports = { canJump, maxSubArray, coinChange, a2 };
