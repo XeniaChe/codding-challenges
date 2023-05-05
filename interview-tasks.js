@@ -97,19 +97,19 @@ const call = (num, banknotes) => {
   let curNum = num;
 
   for (let i = banknotes.length - 1; i >= 0; i--) {
-    const banknKey = +Object.keys(banknotes[i])[0];
+    const bill = +Object.keys(banknotes[i])[0];
 
-    if (banknKey <= curNum) {
-      let billCount = banknotes[i][banknKey],
+    if (bill <= curNum) {
+      let billCount = banknotes[i][bill],
         usedCount = 0;
 
-      while (curNum >= banknKey && billCount > 0) {
-        curNum -= banknKey;
+      while (curNum >= bill && billCount > 0) {
+        curNum -= bill;
         billCount--;
         usedCount++;
       }
 
-      res[banknKey] = usedCount;
+      res[bill] = usedCount;
     }
   }
 
@@ -149,7 +149,7 @@ const actual2 = ChannelStrip({
   lowCut: level,
   volume: level,
 });
-console.log({ actual2 });
+// console.log({ actual2 });
 /* test('GuitarAmp', (assert) => {
   const msg = 'should have distortion, volume, and cabinet';
   const level = 2;
@@ -233,7 +233,7 @@ const moveNull2 = (arr) => {
   return arr2;
 };
 
-console.log(moveNull2(arr));
+// console.log(moveNull2(arr));
 const moveNull = (arr) => {
   const arr2 = new Array(arr.length).fill(null);
 
@@ -347,6 +347,8 @@ const checkUnits = (x, y, z, total = 500) => {
   return fasle;
 };
 
+////////////////////////////////////////////////
+
 const closure = () => {
   const arr1 = [],
     arr2 = [];
@@ -369,34 +371,108 @@ const closure = () => {
 };
 // closure();
 
-const obj = {
-  name: 'test',
-  prop: {
-    // name: "prop name",
-    print: function () {
-      console.log('print0: ' + this.name);
+let autoIncrement = (function () {
+  let number = 0;
+
+  return function () {
+    number++;
+    return number;
+  };
+})();
+
+// console.log(autoIncrement()); //1 !!!!!!!!!!!!!!!!
+// console.log(autoIncrement()); //2
+// console.log(autoIncrement()); //3
+// console.log(autoIncrement()); //4
+////////////////////////////////////////////////
+
+/* 
+  const obj = {
+    name: 'test',
+    prop: {
+      // name: "prop name",
+      print: function () {
+        console.log('print0: ' + this.name);
+      },
     },
-  },
-  print: function () {
-    console.log('print: ' + this.name);
-  },
-  print2: () => console.log('print2: ' + this.name, this),
+    print: function () {
+      console.log('print: ' + this.name);
+    },
+    print2: () => console.log('print2: ' + this.name, this),
+  };
+
+  obj.print(); //ans: test
+  obj.prop.print(); //ans: undefined
+  obj.print2(); //ans: undefined
+
+  const obj2 = {
+    name: 'test',
+    // prop: {
+    //   print: () => console.log('print0: ' + this.name),
+    // },
+    print: function () {
+      console.log('print: ' + this.name);
+    },
+    print2: () => console.log('print2: ' + this.name, this),
+  };
+
+  obj2.print(); //ans: test
+  // obj2.prop.print(); //ans: prop name
+ */
+
+const task1 = (A) => {
+  // Implement your solution here
+  let min = A[0],
+    res = min < 0 ? 1 : min + 1;
+  A.sort();
+
+  for (let i = 1; i < A.length; i++) {
+    if (A[i] == res) res = res + 1;
+
+    if (A[i] < min) {
+      min = A[i];
+
+      res = min < 0 ? 1 : min + 1;
+    }
+  }
+
+  console.log({ res });
+  return res;
 };
+// task1([1, 3, 6, 4, 1, 2]);
+// task1([-2, -3]);
+// task1([3, 2, 1]);
 
-obj.print(); //ans: test
-obj.prop.print(); //ans: undefined
-obj.print2(); //ans: undefined
+const task2 = (obj) => {
+  const res = {};
+  const keys = Object.keys(obj);
 
-const obj2 = {
-  name: 'test',
-  // prop: {
-  //   print: () => console.log('print0: ' + this.name),
-  // },
-  print: function () {
-    console.log('print: ' + this.name);
-  },
-  print2: () => console.log('print2: ' + this.name, this),
+  for (let key of keys) {
+    const keyArr = key.split('_');
+
+    if (keyArr.length > 1) {
+      let pointer = res,
+        j = 0;
+
+      while (j < keyArr.length) {
+        const curNestLvl = keyArr[j];
+
+        if (j == keyArr.length - 1) {
+          pointer[curNestLvl] = obj[key];
+        } else {
+          pointer[curNestLvl] ??= {};
+
+          pointer = pointer[curNestLvl];
+        }
+
+        j++;
+      }
+    } else {
+      res[keyArr[0]] = obj[keyArr[0]];
+    }
+  }
+
+  console.log({ res });
+  return res;
 };
-
-obj2.print(); //ans: test
-// obj2.prop.print(); //ans: prop name
+task2(input);
