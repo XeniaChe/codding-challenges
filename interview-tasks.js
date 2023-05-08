@@ -443,36 +443,99 @@ const task1 = (A) => {
 // task1([-2, -3]);
 // task1([3, 2, 1]);
 
-const task2 = (obj) => {
-  const res = {};
-  const keys = Object.keys(obj);
+/* Generate random password that has len to less than 3 and contains min 1 Upper case, 1 digit, 1 special Char */
 
-  for (let key of keys) {
-    const keyArr = key.split('_');
+const _ = require('lodash');
 
-    if (keyArr.length > 1) {
-      let pointer = res,
-        j = 0;
+function getRandomChar(charSet) {
+  const randomIndex = Math.floor(Math.random() * charSet.length);
+  return charSet[randomIndex];
+}
 
-      while (j < keyArr.length) {
-        const curNestLvl = keyArr[j];
+function passwordGenerator(charsQuantity) {
+  let pass = '';
+  const validChars =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
+  console.log('Initial solution - passwordGenerator');
 
-        if (j == keyArr.length - 1) {
-          pointer[curNestLvl] = obj[key];
-        } else {
-          pointer[curNestLvl] ??= {};
+  if (typeof charsQuantity !== 'number' || !Number.isInteger(charsQuantity))
+    return 'Not an Integer';
+  if (charsQuantity < 3) return 'Minimum length allowed: 3';
 
-          pointer = pointer[curNestLvl];
-        }
+  for (let i = 0; i <= charsQuantity - 1; i++) {
+    pass += validChars.charAt(_.random(0, validChars.length - 1));
+  }
 
-        j++;
-      }
-    } else {
-      res[keyArr[0]] = obj[keyArr[0]];
+  return pass;
+}
+// console.log(passwordGenerator({}));
+
+function generatePassword2(length) {
+  const regex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?><,./-=])[A-Za-z\d!@#$%^&*()_+~`|}{[\]:;?><,./-=]{length,}$/;
+  const validChars =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
+  let password = '';
+
+  while (!regex.test(password)) {
+    // generate random password until it matches the regex pattern
+    password = '';
+    for (let i = 0; i < length; i++) {
+      password += validChars.charAt(
+        Math.floor(Math.random() * validChars.length)
+      );
     }
   }
 
-  console.log({ res });
-  return res;
+  return password;
+}
+
+/* Write generator function that generates Fridays  */
+
+// Pattern
+function* evenNumbers() {
+  let n = 0;
+  while (true) {
+    yield n;
+    n += 2;
+  }
+}
+
+const getNextFriday = (date) => {
+  const fisrtFr = new Date(date);
+
+  fisrtFr.setDate(fisrtFr.getDate() + 7);
+  const year = fisrtFr.getFullYear().toString();
+  const month = ('0' + (fisrtFr.getMonth() + 1)).slice(-2);
+  const day = ('0' + fisrtFr.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
 };
-task2(input);
+
+function* fridaysGenerator(date) {
+  const startDate = date;
+  let workDate = date,
+    latestVal = date;
+
+  while (true) {
+    const resetDate = yield latestVal;
+
+    if (resetDate === 'start') {
+      workDate = startDate;
+
+      latestVal = startDate;
+    } else if (resetDate === 'end') {
+      return latestVal;
+    } else {
+      workDate = getNextFriday(workDate);
+
+      latestVal = workDate;
+    }
+  }
+}
+const fridayGen = fridaysGenerator('2023-06-15');
+
+console.log(fridayGen.next().value);
+console.log(fridayGen.next().value);
+console.log(fridayGen.next('end').value);
+console.log(fridayGen.next().value);

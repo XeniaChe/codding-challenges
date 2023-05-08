@@ -18,5 +18,8 @@
   "homepage": "https://github.com/XeniaChe/codding-challenges#readme",
   "devDependencies": {
     "jest": "^29.3.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
