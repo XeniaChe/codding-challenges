@@ -535,7 +535,35 @@ function* fridaysGenerator(date) {
 }
 const fridayGen = fridaysGenerator('2023-06-15');
 
-console.log(fridayGen.next().value);
+/* console.log(fridayGen.next().value);
 console.log(fridayGen.next().value);
 console.log(fridayGen.next('end').value);
 console.log(fridayGen.next().value);
+ */
+
+// Create a fibonacci generator function
+function* fibonacci() {
+  let prev = 0;
+  let next = 1;
+
+  yield prev;
+  yield next;
+
+  // Add previous and next values and yield them forever
+  while (true) {
+    const newVal = next + prev;
+
+    yield newVal;
+
+    prev = next;
+    next = newVal;
+  }
+}
+
+const fibGen = fibonacci();
+/* console.log(fibGen.next());
+console.log(fibGen.next());
+console.log(fibGen.next());
+console.log(fibGen.next());
+console.log(fibGen.next());
+ */
