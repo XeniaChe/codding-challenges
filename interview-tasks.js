@@ -501,6 +501,49 @@ function* evenNumbers() {
   }
 }
 
+function* generator2(i) {
+  let a = i;
+  while (true) {
+    const append = yield a;
+
+    if (append === 'reset') {
+      a = 3;
+    } else {
+      a += 10;
+    }
+  }
+}
+/* const gen2 = generator2(5);
+console.log(gen2.next().value); //5
+console.log(gen2.next('reset').value); //3
+console.log(gen2.next().value); //13
+console.log(gen2.next().value); //23 
+*/
+
+// RESET value pattern
+function* generator(i) {
+  let a = i,
+    resetVal = i;
+
+  while (true) {
+    const arg = yield a;
+    if (arg === 'stop') {
+      console.log('RESET');
+      a = resetVal;
+    } else {
+      a += 10;
+    }
+  }
+}
+const gen = generator(10);
+/* console.log(gen.next().value); // 10
+console.log(gen.next().value); // 20
+console.log(gen.next('stop').value); //RESET 10
+console.log(gen.next().value); // 20
+console.log(gen.next().value); // 30
+// ...
+ */
+
 const getNextFriday = (date) => {
   const fisrtFr = new Date(date);
 
@@ -513,34 +556,31 @@ const getNextFriday = (date) => {
 };
 
 function* fridaysGenerator(date) {
-  const startDate = date;
-  let workDate = date,
-    latestVal = date;
+  const resetDate = date;
+  let a = date;
 
   while (true) {
-    const resetDate = yield latestVal;
+    const reset = yield a;
 
-    if (resetDate === 'start') {
-      workDate = startDate;
-
-      latestVal = startDate;
-    } else if (resetDate === 'end') {
-      return latestVal;
+    if (reset === 'start') {
+      a = resetDate;
+    } else if (reset === 'end') {
+      return a;
     } else {
-      workDate = getNextFriday(workDate);
-
-      latestVal = workDate;
+      a = getNextFriday(a);
     }
   }
 }
-const fridayGen = fridaysGenerator('2023-06-15');
 
-/* console.log(fridayGen.next().value);
+const fridayGen = fridaysGenerator('2023-06-13');
+/* 
+console.log(fridayGen.next().value);
+console.log(fridayGen.next().value);
+console.log(fridayGen.next('start').value);
+console.log(fridayGen.next().value);
 console.log(fridayGen.next().value);
 console.log(fridayGen.next('end').value);
-console.log(fridayGen.next().value);
  */
-
 // Create a fibonacci generator function
 function* fibonacci() {
   let prev = 0;
@@ -561,9 +601,9 @@ function* fibonacci() {
 }
 
 const fibGen = fibonacci();
-/* console.log(fibGen.next());
-console.log(fibGen.next());
-console.log(fibGen.next());
-console.log(fibGen.next());
-console.log(fibGen.next());
+/* console.log(fibGen.next()); // 0
+console.log(fibGen.next()); //1
+console.log(fibGen.next()); //1
+console.log(fibGen.next()); //2
+console.log(fibGen.next()); //3
  */
